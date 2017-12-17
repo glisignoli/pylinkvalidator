@@ -239,8 +239,8 @@ def _print_details(page_iterator, output_files, config, indent=2):
             oprint("{1}  {0}".format(content_message, initial_indent),
                    files=output_files)
         for source in page.sources:
-            oprint("{1}  from {0}".format(
-                source.origin.geturl(), initial_indent), files=output_files)
+            oprint("{1}  from {0} target={2}".format(
+                source.origin.geturl(), initial_indent, source.target), files=output_files)
             if config.options.show_source:
                 oprint("{1}    {0}".format(
                     source.origin_str, initial_indent),
