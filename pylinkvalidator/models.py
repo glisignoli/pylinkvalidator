@@ -582,7 +582,7 @@ class Config(UTF8Class):
 
         output_group.add_option(
             "-f", "--format", dest="format", action="store",
-            default=FORMAT_PLAIN, choices=[FORMAT_PLAIN],
+            default=FORMAT_PLAIN, choices=[FORMAT_PLAIN, FORMAT_JSON],
             help="Format of the report: plain")
         output_group.add_option(
             "-o", "--output", dest="output", action="store",
