@@ -133,7 +133,7 @@ ExceptionStr = namedtuple_with_defaults(
 
 Link = namedtuple_with_defaults(
     "Link",
-    ["type", "url_split", "original_url_split", "source_str"])
+    ["type", "url_split", "original_url_split", "source_str", "target"])
 
 
 PageCrawl = namedtuple_with_defaults(
@@ -149,7 +149,7 @@ PageStatus = namedtuple_with_defaults(
 
 
 PageSource = namedtuple_with_defaults(
-    "PageSource", ["origin", "origin_str"])
+    "PageSource", ["origin", "origin_str", "target"])
 
 
 ContentCheck = namedtuple_with_defaults(

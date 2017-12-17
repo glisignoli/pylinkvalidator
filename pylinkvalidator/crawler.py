@@ -525,6 +525,7 @@ class PageCrawler(object):
         for element in elements:
             if attribute in element.attrs:
                 url = element[attribute]
+                target = element.attrs.get('target', None)
 
                 if not self.worker_config.strict_mode:
                     url = url.strip()
@@ -540,7 +541,7 @@ class PageCrawler(object):
                 link = Link(
                     type=unicode(element.name), url_split=abs_url_split,
                     original_url_split=original_url_split,
-                    source_str=unicode(element))
+                    source_str=unicode(element), target=target)
                 links.append(link)
 
         return links
@@ -658,7 +659,8 @@ class Site(UTF8Class):
                 continue
 
             page_status = self.page_statuses.get(url_split, None)
-            page_source = PageSource(source_url_split, link.source_str)
+            page_source = PageSource(
+                source_url_split, link.source_str, link.target)
 
             if not page_status:
                 # We never encountered this url before
