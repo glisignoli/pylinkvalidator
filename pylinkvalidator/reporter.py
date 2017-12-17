@@ -4,6 +4,7 @@ Contains the reporting functions
 from __future__ import unicode_literals, absolute_import, print_function
 
 import codecs
+import json
 import re
 import smtplib
 import sys
@@ -70,6 +71,68 @@ def _write_plain_text_report(site, config, output_files, total_time):
         _write_plain_text_report_multi(site, config, output_files, total_time)
     else:
         _write_plain_text_report_single(site, config, output_files, total_time)
+
+
+def _write_json_report(site, config, output_file, total_time):
+    start_urls = ",".join((start_url_split.geturl() for start_url_split in
+                           site.start_url_splits))
+
+    total_urls = len(site.pages)
+    total_errors = len(site.error_pages)
+
+    if not site.is_ok:
+        global_status = "ERROR"
+        error_summary = "with {0} error(s) ".format(total_errors)
+    else:
+        global_status = "SUCCESS"
+        error_summary = ""
+
+    meta = {
+        "total_urls": total_urls,
+        "total_errors": total_errors,
+        "total_time": total_time,
+        "start_urls": start_urls,
+        "global_status": global_status,
+        "error_summary": error_summary
+    }
+    try:
+        avg_response_time = site.get_average_response_time()
+        avg_process_time = site.get_average_process_time()
+        meta.update({"avg_response_time": avg_response_time})
+        meta.update({"avg_process_time": avg_process_time})
+    except Exception:
+        from traceback import print_exc
+        print_exc()
+
+    pages = {}
+
+    if config.options.report_type == REPORT_TYPE_ERRORS:
+        pages = site.error_pages
+    elif config.options.report_type == REPORT_TYPE_ALL:
+        pages = site.pages
+
+    res_pages = []
+
+    for results, resource in pages.items():
+        details = {
+            'fragment': results.fragment,
+            'hostname': results.hostname,
+            'netloc': results.netloc,
+            'path': results.path,
+            'port': results.port,
+            'query': results.query,
+            'scheme': results.scheme,
+            "sources": [source.origin_str for source in resource.sources],
+            "targets": [source.target for source in resource.sources]
+        }
+        res_pages.append(details)
+
+    res = {
+        "meta": meta,
+        "pages": res_pages
+    }
+    output_file.write(
+            json.dumps(res, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
 def _write_plain_text_report_multi(site, config, output_files, total_time):
