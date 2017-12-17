@@ -117,15 +117,24 @@ def _write_json_report(site, config, output_file, total_time):
 
     for results, resource in pages.items():
         details = {
+            'link': resource.url_split.geturl(),
             'fragment': results.fragment,
             'hostname': results.hostname,
             'netloc': results.netloc,
+            'is_local': resource.is_local,
+            'is_html': resource.is_html,
+            'is_ok': resource.is_ok,
+            'is_timeout': resource.is_timeout,
+            'process_time': resource.process_time,
+            'response_time': resource.response_time,
+            'status': resource.status,
             'path': results.path,
             'port': results.port,
             'query': results.query,
             'scheme': results.scheme,
-            "sources": [source.origin_str for source in resource.sources],
-            "targets": [source.target for source in resource.sources]
+            'origins': [source.origin.geturl() for source in resource.sources],
+            'sources': [source.origin_str for source in resource.sources],
+            'targets': [source.target for source in resource.sources]
         }
         res_pages.append(details)
 
