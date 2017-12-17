@@ -243,7 +243,7 @@ def _print_details(page_iterator, output_files, config, indent=2):
                 source.origin.geturl(), initial_indent), files=output_files)
             if config.options.show_source:
                 oprint("{1}    {0}".format(
-                    truncate(source.origin_str), initial_indent),
+                    source.origin_str, initial_indent),
                        files=output_files)
 
 
