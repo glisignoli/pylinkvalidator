@@ -585,7 +585,7 @@ class Config(UTF8Class):
             "-f", "--format", dest="format", action="store",
             default=FORMAT_PLAIN,
             choices=[FORMAT_PLAIN, FORMAT_JSON, FORMAT_JUNIT],
-            help="Format of the report: plain")
+            help="Format of the report: plain (default), json, junit")
         output_group.add_option(
             "-o", "--output", dest="output", action="store",
             default=None,
