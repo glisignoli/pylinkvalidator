@@ -1,4 +1,7 @@
 *.pyc
+*.json
+*.xml
 pylinkvalidator.egg-info/
 dist/
 build/
+.idea/
