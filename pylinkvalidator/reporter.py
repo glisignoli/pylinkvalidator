@@ -237,6 +237,42 @@ def _write_plain_text_report_single(site, config, output_files, total_time):
         _print_details(pages.values(), output_files, config)
 
 
+def print_summary(site, config, total_time, indent=2):
+    total_urls = len(site.pages)
+    total_errors = len(site.error_pages)
+
+    if not site.is_ok:
+        global_status = "ERROR"
+        error_summary = "with {0} error(s) ".format(total_errors)
+    else:
+        global_status = "SUCCESS"
+        error_summary = ""
+
+    print("{0} Crawled {1} urls {2}in {3:.2f} seconds".format(
+        global_status, total_urls, error_summary, total_time))
+
+    pages = {}
+
+    if config.options.report_type == REPORT_TYPE_ERRORS:
+        pages = site.error_pages
+    elif config.options.report_type == REPORT_TYPE_ALL:
+        pages = site.pages
+
+    initial_indent = " " * indent
+    for page in pages.values():
+        print("\n{2}{0}: {1}".format(
+            page.get_status_message(), page.url_split.geturl(),
+            initial_indent))
+        for content_message in page.get_content_messages():
+            print("{1}  {0}".format(content_message, initial_indent))
+        for source in page.sources:
+            print("{1}  from {0} target={2}".format(
+                source.origin.geturl(), initial_indent, source.target))
+            if config.options.show_source:
+                print("{1}    {0}".format(
+                    source.origin_str, initial_indent))
+
+
 def _print_details(page_iterator, output_files, config, indent=2):
     initial_indent = " " * indent
     for page in page_iterator:
