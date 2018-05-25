@@ -144,6 +144,7 @@ def _write_json_report(site, config, output_file, total_time):
     }
     output_file.write(
             json.dumps(res, sort_keys=True, indent=4, separators=(',', ': ')))
+    print_summary(site, config, total_time)
 
 
 def _write_plain_text_report_multi(site, config, output_files, total_time):
