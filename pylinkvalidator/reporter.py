@@ -15,7 +15,12 @@ from junit_xml import TestSuite, TestCase
 
 from pylinkvalidator.compat import StringIO
 from pylinkvalidator.models import (
-    REPORT_TYPE_ERRORS, REPORT_TYPE_ALL, FORMAT_JSON, FORMAT_PLAIN)
+    FORMAT_JSON,
+    FORMAT_JUNIT,
+    FORMAT_PLAIN,
+    REPORT_TYPE_ALL,
+    REPORT_TYPE_ERRORS,
+)
 
 
 PLAIN_TEXT = "text/plain"
@@ -59,6 +64,8 @@ def report(site, config, total_time, logger=None):
             _write_plain_text_report(site, config, output_files, total_time)
         if config.options.format == FORMAT_JSON:
             _write_json_report(site, config, output_file, total_time)
+        if config.options.format == FORMAT_JUNIT:
+            _write_junit_report(site, config, output_file, total_time)
     except Exception:
         if logger:
             logger.exception("An exception occurred while writing the report")
