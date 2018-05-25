@@ -1,1 +1,2 @@
 beautifulsoup4>=4.2.0
+junit-xml>=1.8
