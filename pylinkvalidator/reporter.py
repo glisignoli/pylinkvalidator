@@ -11,6 +11,8 @@ import sys
 
 from email.mime.text import MIMEText
 
+from junit_xml import TestSuite, TestCase
+
 from pylinkvalidator.compat import StringIO
 from pylinkvalidator.models import (
     REPORT_TYPE_ERRORS, REPORT_TYPE_ALL, FORMAT_JSON, FORMAT_PLAIN)
@@ -73,6 +75,41 @@ def _write_plain_text_report(site, config, output_files, total_time):
         _write_plain_text_report_multi(site, config, output_files, total_time)
     else:
         _write_plain_text_report_single(site, config, output_files, total_time)
+
+
+def _write_junit_report(site, config, output_file, total_time):
+    pages = site.pages
+    test_cases = []
+
+    for results, resource in pages.items():
+        origins = [source.origin.geturl() for source in resource.sources]
+        if resource.status == 200:
+            test_case = TestCase(
+                name=resource.url_split.geturl(),
+                classname=results.hostname,
+                elapsed_sec=resource.response_time,
+                stdout=resource.status,
+                status="passed"
+                )
+        else:
+            stderr_message = "Link found on:\n{}".format("\n".join(origins))
+            test_case = TestCase(
+                name=resource.url_split.geturl(),
+                classname=results.hostname,
+                elapsed_sec=resource.response_time,
+                stderr=stderr_message,
+                status="failed"
+            )
+            if resource.exception:
+                message = str(resource.exception)
+            else:
+                message = "Expected 200 OK but got {}".format(resource.status)
+            test_case.add_failure_info(
+                message=message, failure_type="UnexpectedStatusCode")
+        test_cases.append(test_case)
+    test_suite = TestSuite("pylinkvalidator test suite", test_cases)
+    output_file.write(TestSuite.to_xml_string([test_suite]))
+    print_summary(site, config, total_time)
 
 
 def _write_json_report(site, config, output_file, total_time):
