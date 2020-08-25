@@ -47,6 +47,19 @@ else:
         return s
     from io import StringIO
 
+    # Implement a rudimentary http->https upgrade to simulate HSTS.
+    # This is a proof of concept at this point.
+    from urllib import request
+    class HSTSRedirectHandler(request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            if 'Strict-Transport-Security' in "headers":
+                newurl = newurl.replace("http://", "https://")
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+    opener = request.build_opener(HSTSRedirectHandler())
+    request.install_opener(opener)
+
+
 try:
     from logging import NullHandler
 except ImportError:
