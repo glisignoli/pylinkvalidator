@@ -50,9 +50,10 @@ else:
     # Implement a rudimentary http->https upgrade to simulate HSTS.
     # This is a proof of concept at this point.
     from urllib import request
+    ALWAYS_ENABLE = True # This should be temporary
     class HSTSRedirectHandler(request.HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, headers, newurl):
-            if 'Strict-Transport-Security' in "headers":
+            if ALWAYS_ENABLE or 'Strict-Transport-Security' in "headers":
                 newurl = newurl.replace("http://", "https://")
             return super().redirect_request(req, fp, code, msg, headers, newurl)
 
