@@ -8,7 +8,8 @@ Classes with crawling logic are declared in the crawler module.
 """
 from __future__ import unicode_literals, absolute_import
 
-from collections import namedtuple, Mapping, defaultdict
+from collections import namedtuple, defaultdict
+from collections.abc import Mapping
 from optparse import OptionParser, OptionGroup
 import re
 

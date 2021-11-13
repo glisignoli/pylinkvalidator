@@ -10,7 +10,10 @@ import sys
 version = __import__('pylinkvalidator').__version__
 
 if sys.version_info[0] >= 3:
-    requires = ['beautifulsoup4>=4.2.0']
+    requires = [
+        'beautifulsoup4>=4.2.0',
+        'junit-xml>=1.8'
+    ]
 else:
     requires = []
 
@@ -45,6 +48,10 @@ resources like images.
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Internet :: WWW/HTTP :: Site Management :: Link Checking',
         'Topic :: Utilities',
     ],
